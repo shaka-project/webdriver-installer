@@ -1,0 +1,23 @@
+{
+  "name": "webdriver-installer",
+  "version": "1.0.0",
+  "description": "Install the right WebDriver version for your local browsers, automatically.",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeyparrish/webdriver-installer"
+  },
+  "keywords": [
+    "webdriver",
+    "chrome",
+    "firefox",
+    "edge"
+  ],
+  "author": "Joey Parrish <joeyparrish@google.com>",
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "tar-stream": "^2.2.0",
+    "yauzl": "^2.10.0"
+  },
+  "license": "Apache-2.0"
+}
