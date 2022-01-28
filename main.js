@@ -21,12 +21,13 @@ const INSTALLER_CLASSES = [
  * Install drivers to match all detected browsers.
  *
  * @param {string=} outputDirectory  Defaults to ./
+ * @param {boolean=} logging
  * @return {!Promise}
  */
-async function main(outputDirectory) {
-  outputDirectory = outputDirectory || '.';
-
-  console.log(`Installing binaries to ${outputDirectory}`);
+async function main(outputDirectory='.', logging=true) {
+  if (logging) {
+    console.log(`Installing binaries to ${outputDirectory}`);
+  }
 
   for (const InstallerClass of INSTALLER_CLASSES) {
     const installer = new InstallerClass();
@@ -35,7 +36,9 @@ async function main(outputDirectory) {
     const browserVersion = await installer.getInstalledBrowserVersion();
 
     if (browserVersion == null) {
-      console.log(`${browserName} not found.`);
+      if (logging) {
+        console.log(`${browserName} not found.`);
+      }
     } else {
       const installedDriverVersion =
           await installer.getInstalledDriverVersion(outputDirectory);
@@ -43,14 +46,18 @@ async function main(outputDirectory) {
           await installer.getBestDriverVersion(browserVersion);
 
       if (installedDriverVersion == bestDriverVersion) {
-        console.log(
-            `Version ${installedDriverVersion} of ${driverName}` +
-            ` already installed for ${browserName} version ${browserVersion}`);
+        if (logging) {
+          console.log(
+              `Version ${installedDriverVersion} of ${driverName} already` +
+              ` installed for ${browserName} version ${browserVersion}`);
+        }
       } else {
         await installer.install(bestDriverVersion, outputDirectory);
-        console.log(
-            `Installed version ${bestDriverVersion} of ${driverName}` +
-            ` for ${browserName} version ${browserVersion}`);
+        if (logging) {
+          console.log(
+              `Installed version ${bestDriverVersion} of ${driverName}` +
+              ` for ${browserName} version ${browserVersion}`);
+        }
       }
     }
   }
@@ -67,4 +74,6 @@ if (require.main == module) {
   }
 
   main(args[0]);
+} else {
+  module.exports = {installWebDrivers: main};
 }
