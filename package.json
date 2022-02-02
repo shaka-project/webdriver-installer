@@ -16,6 +16,7 @@
   "author": "Joey Parrish <joeyparrish@google.com>",
   "dependencies": {
     "node-fetch": "^2.6.7",
+    "regedit": "^5.0.0",
     "tar-stream": "^2.2.0",
     "yauzl": "^2.10.0"
   },

@@ -35,7 +35,7 @@ class FirefoxWebDriverInstaller extends WebDriverInstallerBase {
       return await InstallerUtils.getMacAppVersion('Firefox');
     } else if (os.platform() == 'win32') {
       return await InstallerUtils.getWindowsRegistryVersion(
-          'HKLM\\SOFTWARE\\Mozilla\\Mozilla Firefox',
+          'HKLM\\Software\\Mozilla\\Mozilla Firefox',
           'CurrentVersion')
     } else {
       throw new Error(`Unrecognized platform: ${os.platform()}`);

@@ -10,12 +10,14 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 const os = require('os');
 const path = require('path');
+const regedit = require('regedit');
 const stream = require('stream');
 const tar = require('tar-stream');
 const util = require('util');
 const yauzl = require('yauzl');
 const zlib = require('zlib');
 
+const regQuery = util.promisify(regedit.list);
 const execFile = util.promisify(childProcess.execFile);
 const pipeline = util.promisify(stream.pipeline);
 const zipFromBuffer = util.promisify(yauzl.fromBuffer);
@@ -88,26 +90,12 @@ class InstallerUtils {
       return null;
     }
 
-    const result = await InstallerUtils.runCommand([
-      'reg', 'query', path, '/v', key,
-    ]);
-
-    // Find the line with the key in it.  For "version", it would look something
-    // like this:
-    //     version    REG_SZ    94.0.4606.61
-    for (const line of result.stdout.split('\n')) {
-      if (line[0] == ' ' && line.includes(key)) {
-        // Find the section that starts with a number.
-        for (const section of line.split(' ')) {
-          if (section[0] >= '0' && section[0] <= '9') {
-            return section;
-          }
-        }
-      }
+    const result = await regQuery(path, '64');
+    if (!result[path].exists || !result[path].values[key]) {
+      return null;
     }
 
-    // Not found.
-    return null;
+    return result[path].values[key].value;
   }
 
   /**

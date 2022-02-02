@@ -37,7 +37,7 @@ class ChromeWebDriverInstaller extends WebDriverInstallerBase {
       return await InstallerUtils.getMacAppVersion('Google Chrome');
     } else if (os.platform() == 'win32') {
       return await InstallerUtils.getWindowsRegistryVersion(
-          'HKEY_CURRENT_USER\\Software\\Google\\Chrome\\BLBeacon',
+          'HKCU\\Software\\Google\\Chrome\\BLBeacon',
           'version');
     } else {
       throw new Error(`Unrecognized platform: ${os.platform()}`);
