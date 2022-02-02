@@ -73,7 +73,15 @@ if (require.main == module) {
     process.exit(1);
   }
 
-  main(args[0]);
+  (async () => {
+    try {
+      await main(args[0]);
+      process.exit(0);
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
+    }
+  })();
 } else {
   module.exports = {installWebDrivers: main};
 }
