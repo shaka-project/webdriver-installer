@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/joeyparrish/webdriver-installer/compare/v1.0.1...v1.1.0) (2022-02-03)
+
+
+### Features
+
+* Add MS Edge support on Linux and Mac ([59505f4](https://github.com/joeyparrish/webdriver-installer/commit/59505f49b94030c63377d72e2b4639093915ab3d))
+
+
+### Bug Fixes
+
+* Fix GitHub API rate limit issues getting geckodriver release ([074beb7](https://github.com/joeyparrish/webdriver-installer/commit/074beb79adf7d9807ab57b67c9edd26d9451270e))
+
 ## [1.0.1](https://github.com/joeyparrish/webdriver-installer/compare/v1.0.0...v1.0.1) (2022-02-02)
 
 
