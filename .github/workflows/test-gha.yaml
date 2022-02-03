@@ -29,29 +29,19 @@ jobs:
           check_driver() {
             local driver="$1"
             if ! ./$driver --version &>/dev/null; then
-              echo "$driver not found!"
-              return 1
+              echo "::error::$driver not found on ${{ runner.os }}!"
             fi
           }
 
-          rv=0
-
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            check_driver chromedriver || rv=1
-            check_driver geckodriver || rv=1
-            check_driver msedgedriver || rv=1
+            check_driver chromedriver
+            check_driver geckodriver
+            check_driver msedgedriver
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
-            check_driver chromedriver || rv=1
-            check_driver geckodriver || rv=1
+            check_driver chromedriver
+            check_driver geckodriver
           elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            check_driver chromedriver.exe || rv=1
-            check_driver geckodriver.exe || rv=1
-            check_driver msedgedriver.exe || rv=1
-          fi
-
-          if [[ "$rv" == "0" ]]; then
-            echo "All expected drivers installed in the GitHub Actions environment."
-          else
-            echo "Some expected drivers were not installed in the GitHub Actions environment!"
-            exit 1
+            check_driver chromedriver.exe
+            check_driver geckodriver.exe
+            check_driver msedgedriver.exe
           fi
