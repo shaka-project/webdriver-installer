@@ -227,10 +227,13 @@ class InstallerUtils {
    * @return {?string}
    */
   static async fetchLatestGitHubTag(repo) {
-    const url = `https://api.github.com/repos/${repo}/releases/latest`;
-    const response = await InstallerUtils.fetchUrl(url);
-    const releaseMetadata = await response.json();
-    return releaseMetadata['tag_name'];
+    // The GitHub API has rate limits, but this is public.  It will redirect to
+    // a URL specific to the tag.
+    const url = `https://github.com/${repo}/releases/latest`;
+    const response = await fetch(url, {method: 'HEAD'});
+    // The redirected URL will be something like:
+    //   "https://github.com/mozilla/geckodriver/releases/tag/v0.30.0"
+    return response.url.split('/').pop();
   }
 
   /**
