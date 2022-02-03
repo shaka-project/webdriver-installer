@@ -22,6 +22,9 @@ const execFile = util.promisify(childProcess.execFile);
 const pipeline = util.promisify(stream.pipeline);
 const zipFromBuffer = util.promisify(yauzl.fromBuffer);
 
+const WINDOWS_REGISTRY_APP_PATHS =
+    'HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\App\ Paths\\';
+
 /**
  * A static utility class for driver installers to use for common operations.
  */
@@ -90,7 +93,12 @@ class InstallerUtils {
       return null;
     }
 
-    const result = await regQuery(path, '64');
+    // Try the 64-bit registry first, then fall back to the 32-bit registry.
+    // Necessary values could be in either location.
+    let result = await regQuery(path, '64');
+    if (!result[path].exists || !result[path].values[key]) {
+      result = await regQuery(path, '32');
+    }
     if (!result[path].exists || !result[path].values[key]) {
       return null;
     }
@@ -125,9 +133,16 @@ class InstallerUtils {
     }
 
     if (!(await InstallerUtils.fileExists(path))) {
-      // No such file.  Avoid the need to parse "not found" errors from
-      // powershell output.
-      return null;
+      // No such file.
+      // If it's a relative path, ask the registry for a full one.
+      if (!path.includes('/') && !path.includes('\\')) {
+        path = await InstallerUtils.getWindowsRegistryVersion(
+            WINDOWS_REGISTRY_APP_PATHS + path,
+            '');
+        if (!path || !(await InstallerUtils.fileExists(path))) {
+          return null;
+        }
+      }
     }
 
     const result = await InstallerUtils.runCommand([

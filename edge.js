@@ -36,8 +36,7 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
     } else if (os.platform() == 'darwin') {
       return await InstallerUtils.getMacAppVersion('Microsoft Edge');
     } else if (os.platform() == 'win32') {
-      return await InstallerUtils.getWindowsExeVersion(
-          'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
+      return await InstallerUtils.getWindowsExeVersion('msedge.exe');
     } else {
       throw new Error(`Unrecognized platform: ${os.platform()}`);
     }
