@@ -28,8 +28,19 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
 
   /** @return {!Promise<?string>} */
   async getInstalledBrowserVersion() {
-    return await InstallerUtils.getWindowsExeVersion(
-        'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
+    if (os.platform() == 'linux') {
+      const output = await InstallerUtils.getCommandOutputOrNullIfMissing(
+          ['microsoft-edge', '--version']);
+      // Output is a string like "Microsoft Edge 97.0.1072.76\n"
+      return output ? output.trim().split(' ')[2] : null;
+    } else if (os.platform() == 'darwin') {
+      return await InstallerUtils.getMacAppVersion('Microsoft Edge');
+    } else if (os.platform() == 'win32') {
+      return await InstallerUtils.getWindowsExeVersion(
+          'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
+    } else {
+      throw new Error(`Unrecognized platform: ${os.platform()}`);
+    }
   }
 
   /**
@@ -65,9 +76,30 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
    * @return {!Promise}
    */
   async install(driverVersion, outputDirectory) {
-    const archiveUrl = `${CDN_URL}/${driverVersion}/edgedriver_win64.zip`;
-    const binaryName = 'msedgedriver.exe';
-    const outputName = this.getDriverName() + '.exe';
+    let platform;
+
+    if (os.platform() == 'linux') {
+      platform = 'linux64';
+    } else if (os.platform() == 'darwin') {
+      platform = 'mac64';
+    } else if (os.platform() == 'win32') {
+      platform = 'win64';
+    } else {
+      throw new Error(`Unrecognized platform: ${os.platform()}`);
+    }
+
+    const archiveUrl = `${CDN_URL}/${driverVersion}/edgedriver_${platform}.zip`;
+
+    let binaryName = 'msedgedriver';
+    if (os.platform() == 'win32') {
+      binaryName += '.exe';
+    }
+
+    let outputName = this.getDriverName();
+    if (os.platform() == 'win32') {
+      outputName += '.exe';
+    }
+
     return await InstallerUtils.installBinary(
         archiveUrl, binaryName, outputName,
         outputDirectory, /* isZip= */ true);
