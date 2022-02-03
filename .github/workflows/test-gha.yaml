@@ -30,18 +30,21 @@ jobs:
             local driver="$1"
             if ! ./$driver --version &>/dev/null; then
               echo "::error::$driver not found on ${{ runner.os }}!"
+              return 1
             fi
           }
 
+          rv=0
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            check_driver chromedriver
-            check_driver geckodriver
-            check_driver msedgedriver
+            check_driver chromedriver || rv=1
+            check_driver geckodriver || rv=1
+            check_driver msedgedriver || rv=1
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
-            check_driver chromedriver
-            check_driver geckodriver
+            check_driver chromedriver || rv=1
+            check_driver geckodriver || rv=1
           elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            check_driver chromedriver.exe
-            check_driver geckodriver.exe
-            check_driver msedgedriver.exe
+            check_driver chromedriver.exe || rv=1
+            check_driver geckodriver.exe || rv=1
+            check_driver msedgedriver.exe || rv=1
           fi
+          exit "$rv"
