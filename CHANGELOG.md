@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.2](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.1...v1.1.2) (2022-02-03)
+
+
+### Bug Fixes
+
+* Fix CLI installation ([2f6b649](https://github.com/joeyparrish/webdriver-installer/commit/2f6b649033312f778795b1372abfc0a175d70e61))
+
 ### [1.1.1](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.0...v1.1.1) (2022-02-03)
 
 
