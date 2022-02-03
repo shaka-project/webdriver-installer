@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.1](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.0...v1.1.1) (2022-02-03)
+
+
+### Bug Fixes
+
+* Make Windows browser version queries more robust ([85f3b27](https://github.com/joeyparrish/webdriver-installer/commit/85f3b2796e06e1a0f2171b46beef73f6a0407ecb))
+
 ## [1.1.0](https://github.com/joeyparrish/webdriver-installer/compare/v1.0.1...v1.1.0) (2022-02-03)
 
 
