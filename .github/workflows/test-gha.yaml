@@ -1,0 +1,57 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Test in GitHub Actions Environment
+
+jobs:
+  release-please:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+      # Disable fail-fast so that one matrix-job failing doesn't make the other
+      # ones end early.  We want to see the results on all platforms.
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: node ./main.js
+      - name: Check installed drivers
+        shell: bash
+        run: |
+          check_driver() {
+            local driver="$1"
+            if ! ./$driver --version &>/dev/null; then
+              echo "$driver not found!"
+              return 1
+            fi
+          }
+
+          rv=0
+
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            check_driver chromedriver || rv=1
+            check_driver geckodriver || rv=1
+            check_driver msedgedriver || rv=1
+          elif [[ "${{ runner.os }}" == "Linux" ]]; then
+            check_driver chromedriver || rv=1
+            check_driver geckodriver || rv=1
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            check_driver chromedriver.exe || rv=1
+            check_driver geckodriver.exe || rv=1
+            check_driver msedgedriver.exe || rv=1
+          fi
+
+          if [[ "$rv" == "0" ]]; then
+            echo "All expected drivers installed in the GitHub Actions environment."
+          else
+            echo "Some expected drivers were not installed in the GitHub Actions environment!"
+            exit 1
+          fi
