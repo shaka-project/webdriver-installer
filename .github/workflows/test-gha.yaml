@@ -2,6 +2,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Enable tmate debugging'
+        required: false
+        default: false
 
 name: Test in GitHub Actions Environment
 
@@ -48,3 +54,5 @@ jobs:
             check_driver msedgedriver.exe || rv=1
           fi
           exit "$rv"
+      - uses: mxschmitt/action-tmate@v3
+        if: ${{ failure() && github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
