@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.1.3](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.2...v1.1.3) (2022-02-11)
+
+
+### Bug Fixes
+
+* Choose platform-specific msedgedriver version ([#8](https://github.com/joeyparrish/webdriver-installer/issues/8)) ([2e0e859](https://github.com/joeyparrish/webdriver-installer/commit/2e0e8598f878c0c3fcd8ed55d4e830da398a891b))
+
+
 ### [1.1.2](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.1...v1.1.2) (2022-02-03)
 
 
