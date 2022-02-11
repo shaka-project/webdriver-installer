@@ -64,7 +64,19 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
    */
   async getBestDriverVersion(browserVersion) {
     const majorVersion = browserVersion.split('.')[0];
-    const versionUrl = `${CDN_URL}/LATEST_RELEASE_${majorVersion}`;
+
+    let platform;
+    if (os.platform() == 'linux') {
+      platform = 'LINUX';
+    } else if (os.platform() == 'darwin') {
+      platform = 'MACOS';
+    } else if (os.platform() == 'win32') {
+      platform = 'WINDOWS';
+    } else {
+      throw new Error(`Unrecognized platform: ${os.platform()}`);
+    }
+
+    const versionUrl = `${CDN_URL}/LATEST_RELEASE_${majorVersion}_${platform}`;
     return await InstallerUtils.fetchVersionUrl(versionUrl, 'UTF-16LE');
   }
 
