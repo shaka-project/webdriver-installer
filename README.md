@@ -37,3 +37,4 @@ async function foo() {
   await installWebDrivers('/path/to/webdriver-binaries/', withLogging);
 }
 ```
+
