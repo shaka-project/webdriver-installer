@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.4](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.3...v1.1.4) (2022-02-17)
+
+
+### Bug Fixes
+
+* Fix unlinking existing binaries ([#12](https://github.com/joeyparrish/webdriver-installer/issues/12)) ([8a43765](https://github.com/joeyparrish/webdriver-installer/commit/8a43765b54fbbf164762f7a8edf52520b4d08059))
+
 ### [1.1.3](https://github.com/joeyparrish/webdriver-installer/compare/v1.1.2...v1.1.3) (2022-02-11)
 
 
