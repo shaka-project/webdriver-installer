@@ -84,37 +84,37 @@ class InstallerUtils {
   /**
    * Get a version number from the Windows registry.
    *
-   * @param {string} path
+   * @param {string} regPath
    * @param {string} key
    * @return {!Promise<?string>}
    */
-  static async getWindowsRegistryVersion(path, key) {
+  static async getWindowsRegistryVersion(regPath, key) {
     if (os.platform() != 'win32') {
       return null;
     }
 
     // Try the 64-bit registry first, then fall back to the 32-bit registry.
     // Necessary values could be in either location.
-    let result = await regQuery(path, '64');
-    if (!result[path].exists || !result[path].values[key]) {
-      result = await regQuery(path, '32');
+    let result = await regQuery(regPath, '64');
+    if (!result[regPath].exists || !result[regPath].values[key]) {
+      result = await regQuery(regPath, '32');
     }
-    if (!result[path].exists || !result[path].values[key]) {
+    if (!result[regPath].exists || !result[regPath].values[key]) {
       return null;
     }
 
-    return result[path].values[key].value;
+    return result[regPath].values[key].value;
   }
 
   /**
    * Test if a file exists.
    *
-   * @param {path}
+   * @param {filePath}
    * @return {!Promise<boolean}
    */
-  static async fileExists(path) {
+  static async fileExists(filePath) {
     try {
-      await fsPromises.stat(path);
+      await fsPromises.stat(filePath);
       return true;
     } catch (error) {
       return false;
@@ -124,22 +124,23 @@ class InstallerUtils {
   /**
    * Get a version number from the metadata of a Windows executable.
    *
-   * @param {string} path
+   * @param {string} executablePath
    * @return {!Promise<?string>}
    */
-  static async getWindowsExeVersion(path) {
+  static async getWindowsExeVersion(executablePath) {
     if (os.platform() != 'win32') {
       return null;
     }
 
-    if (!(await InstallerUtils.fileExists(path))) {
+    if (!(await InstallerUtils.fileExists(executablePath))) {
       // No such file.
       // If it's a relative path, ask the registry for a full one.
-      if (!path.includes('/') && !path.includes('\\')) {
-        path = await InstallerUtils.getWindowsRegistryVersion(
-            WINDOWS_REGISTRY_APP_PATHS + path,
+      if (!executablePath.includes('/') && !executablePath.includes('\\')) {
+        executablePath = await InstallerUtils.getWindowsRegistryVersion(
+            WINDOWS_REGISTRY_APP_PATHS + executablePath,
             '');
-        if (!path || !(await InstallerUtils.fileExists(path))) {
+        if (!executablePath ||
+            !(await InstallerUtils.fileExists(executablePath))) {
           return null;
         }
       }
@@ -147,7 +148,7 @@ class InstallerUtils {
 
     const result = await InstallerUtils.runCommand([
       'powershell',
-      `(Get-Item "${path}").VersionInfo.ProductVersion`,
+      `(Get-Item "${executablePath}").VersionInfo.ProductVersion`,
     ]);
 
     const output = result.stdout.trim();
@@ -330,7 +331,7 @@ class InstallerUtils {
     // permission errors overwriting it.  Unlinking it first will ensure the
     // newly-written file is a fresh filesystem inode that doesn't conflict
     // with what's running.
-    if (await InstallerUtils.fileExists(path)) {
+    if (await InstallerUtils.fileExists(outputPath)) {
       await fsPromises.unlink(outputPath);
     }
 
