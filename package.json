@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/joeyparrish/webdriver-installer"
+    "url": "https://github.com/shaka-project/webdriver-installer"
   },
   "keywords": [
     "webdriver",
