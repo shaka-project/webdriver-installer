@@ -1,6 +1,6 @@
 {
   "name": "webdriver-installer",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Install the right WebDriver version for your local browsers, automatically.",
   "main": "main.js",
   "bin": {

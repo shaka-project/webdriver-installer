@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/shaka-project/webdriver-installer/compare/v1.1.4...v1.1.5) (2022-12-14)
+
+
+### Bug Fixes
+
+* Fix msedgedriver version detection ([#20](https://github.com/shaka-project/webdriver-installer/issues/20)) ([3838b88](https://github.com/shaka-project/webdriver-installer/commit/3838b889772e2a0ce7167e9220969b25714f0d03))
+
 ### [1.1.4](https://github.com/shaka-project/webdriver-installer/compare/v1.1.3...v1.1.4) (2022-02-17)
 
 
