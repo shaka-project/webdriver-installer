@@ -54,8 +54,8 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
 
     const output = await InstallerUtils.getCommandOutputOrNullIfMissing(
         [outputPath, '--version']);
-    // Output is a string like "MSEdgeDriver 96.0.1054.62 (sha1)\n"
-    return output ? output.trim().split(' ')[1] : null;
+    // Output is a string like "Microsoft Edge WebDriver 108.0.1462.46 ...\n"
+    return output ? output.trim().split(' ')[3] : null;
   }
 
   /**
