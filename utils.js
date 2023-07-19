@@ -76,7 +76,8 @@ class InstallerUtils {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(
-          `Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+          `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
+          { cause: response });
     }
     return response;
   }
@@ -223,7 +224,7 @@ class InstallerUtils {
   }
 
   /**
-   * Fetch a version number from a URL.  Both Chrome and Edge use this.
+   * Fetch a version number from a URL.
    *
    * @param {string} url
    * @param {string=} encoding
@@ -234,6 +235,50 @@ class InstallerUtils {
     const data = Buffer.from(await response.arrayBuffer());
     // Decode the string, then remove any newlines.
     return data.toString(encoding).trim();
+  }
+
+  /**
+   * Fetch a version number from a URL.  If not found, downgrade the major
+   * version and try again.  If a WebDriver release lags the browser release
+   * (which seems common), this will compensate.  Both Chrome and Edge use
+   * this.
+   *
+   * @param {number} idealMajorVersion
+   * @param {number} minMajorVersion
+   * @param {function(number): string} urlFormatter
+   * @param {string=} encoding
+   * @return {!Promise<string>}
+   */
+  static async fetchVersionUrlWithAutomaticDowngrade(
+      idealMajorVersion, minMajorVersion, urlFormatter, encoding) {
+    let majorVersion = idealMajorVersion;
+    let firstError = null;
+
+    while (majorVersion >= minMajorVersion) {
+      const versionUrl = urlFormatter(majorVersion);
+      try {
+        return await InstallerUtils.fetchVersionUrl(versionUrl, encoding);
+      } catch (error) {
+        if (error.cause.status != 404) {
+          // Any unexpected error (other than HTTP 404) is thrown immediately.
+          throw error;
+        }
+
+        // Save the first error in case we run out this loop.  We'll throw this
+        // one if none of the allowed versions can be found.
+        if (firstError == null) {
+          firstError = error;
+        }
+
+        // For 404 errors, decrease the major version, fall through, loop, and
+        // try again.
+        majorVersion--;
+      }
+    }
+
+    // We tried all allowed versions.  Throw the initial error, which will have
+    // details of the first URL we tried.
+    throw firstError;
   }
 
   /**
