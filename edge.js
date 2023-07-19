@@ -63,7 +63,7 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
    * @return {!Promise<string>}
    */
   async getBestDriverVersion(browserVersion) {
-    const majorVersion = browserVersion.split('.')[0];
+    const idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
 
     let platform;
     if (os.platform() == 'linux') {
@@ -76,8 +76,15 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
       throw new Error(`Unrecognized platform: ${os.platform()}`);
     }
 
-    const versionUrl = `${CDN_URL}/LATEST_RELEASE_${majorVersion}_${platform}`;
-    return await InstallerUtils.fetchVersionUrl(versionUrl, 'UTF-16LE');
+    const urlFormatter = (majorVersion) => {
+      return `${CDN_URL}/LATEST_RELEASE_${majorVersion}_${platform}`;
+    };
+
+    return await InstallerUtils.fetchVersionUrlWithAutomaticDowngrade(
+        idealMajorVersion,
+        /* minMajorVersion */ idealMajorVersion - 2,
+        urlFormatter,
+        'UTF-16LE');
   }
 
   /**
