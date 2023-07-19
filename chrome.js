@@ -63,7 +63,7 @@ class ChromeWebDriverInstaller extends WebDriverInstallerBase {
    * @return {!Promise<string>}
    */
   async getBestDriverVersion(browserVersion) {
-    const idealMajorVersion = parseInt(browserVersion.split('.')[0]);
+    const idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
     return await InstallerUtils.fetchVersionUrlWithAutomaticDowngrade(
         idealMajorVersion,
         /* minMajorVersion */ idealMajorVersion - 2,

@@ -63,7 +63,7 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
    * @return {!Promise<string>}
    */
   async getBestDriverVersion(browserVersion) {
-    const idealMajorVersion = parseInt(browserVersion.split('.')[0]);
+    const idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
 
     let platform;
     if (os.platform() == 'linux') {
