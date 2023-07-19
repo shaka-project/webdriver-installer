@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.6](https://github.com/shaka-project/webdriver-installer/compare/v1.1.5...v1.1.6) (2023-07-19)
+
+
+### Bug Fixes
+
+* Ignore errors executing non-executable drivers ([#23](https://github.com/shaka-project/webdriver-installer/issues/23)) ([07c8644](https://github.com/shaka-project/webdriver-installer/commit/07c864446e68e6f8714c3d1a899b42b2d0931aae)), closes [#22](https://github.com/shaka-project/webdriver-installer/issues/22)
+* Retry when WebDriver updates are not available yet ([#24](https://github.com/shaka-project/webdriver-installer/issues/24)) ([e0312c8](https://github.com/shaka-project/webdriver-installer/commit/e0312c89eab70bbb7241298846dff93e4a690753))
+
 ## [1.1.5](https://github.com/shaka-project/webdriver-installer/compare/v1.1.4...v1.1.5) (2022-12-14)
 
 
