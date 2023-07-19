@@ -59,6 +59,11 @@ class InstallerUtils {
       if (error.code == 'ENOENT') {
         // Command does not exist.
         return null;
+      } else if (error.code == 'EACCES') {  // Missing "s" is not a typo!
+        // Command is not executable.  This can happen after a failed run that
+        // downloads something, but is interrupted before setting its
+        // executable bit.
+        return null;
       } else {
         // Command exists, but failed.
         throw error;
