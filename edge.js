@@ -90,7 +90,6 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
   /**
    * @param {string} driverVersion
    * @param {string} outputDirectory
-   * @param {string=} outputName
    * @return {!Promise}
    */
   async install(driverVersion, outputDirectory) {
