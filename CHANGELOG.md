@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.7](https://github.com/shaka-project/webdriver-installer/compare/v1.1.6...v1.1.7) (2023-08-17)
+
+
+### Bug Fixes
+
+* Fix Chromedriver download for version 115+ ([#28](https://github.com/shaka-project/webdriver-installer/issues/28)) ([1d17e40](https://github.com/shaka-project/webdriver-installer/commit/1d17e40c70be980067f4972d538ddb55db88c759))
+* Get the correct binary for Edge on M1 macs ([#30](https://github.com/shaka-project/webdriver-installer/issues/30)) ([b5303ea](https://github.com/shaka-project/webdriver-installer/commit/b5303ea26653cee24a122208a1e7088021a77ebe))
+
 ## [1.1.6](https://github.com/shaka-project/webdriver-installer/compare/v1.1.5...v1.1.6) (2023-07-19)
 
 
