@@ -98,7 +98,11 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
     if (os.platform() == 'linux') {
       platform = 'linux64';
     } else if (os.platform() == 'darwin') {
-      platform = 'mac64';
+      if (process.arch == 'arm64') {
+        platform = 'mac64_m1';
+      } else {
+        platform = 'mac64';
+      }
     } else if (os.platform() == 'win32') {
       platform = 'win64';
     } else {
