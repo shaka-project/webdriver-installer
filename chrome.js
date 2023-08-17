@@ -12,6 +12,8 @@ const path = require('path');
 
 const CDN_URL = 'https://chromedriver.storage.googleapis.com';
 const VERSION_DATA_URL = 'https://googlechromelabs.github.io/chrome-for-testing/latest-versions-per-milestone-with-downloads.json';
+// Chrome distribution changed in version 115.
+const NEW_CHROME_DISTRIBUTION_VERSION = 115;
 
 /**
  * An installer for chromedriver for desktop Chrome.
@@ -66,8 +68,7 @@ class ChromeWebDriverInstaller extends WebDriverInstallerBase {
   async getBestDriverVersion(browserVersion) {
     const idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
 
-    // Chrome distribution changed in version 115.
-    if (idealMajorVersion < 115) {
+    if (idealMajorVersion < NEW_CHROME_DISTRIBUTION_VERSION) {
       return await InstallerUtils.fetchVersionUrl(
           `${CDN_URL}/LATEST_RELEASE_${idealMajorVersion}`);
     } else {
@@ -77,7 +78,7 @@ class ChromeWebDriverInstaller extends WebDriverInstallerBase {
       // We haven't seen this become necessary yet since the new distribution
       // mechanism debuted, but better safe than sorry.
       let majorVersion = idealMajorVersion;
-      while (majorVersion >= 115) {
+      while (majorVersion >= NEW_CHROME_DISTRIBUTION_VERSION) {
         if (majorVersion in data['milestones']) {
           return data['milestones'][majorVersion]['version'];
         }
@@ -97,8 +98,7 @@ class ChromeWebDriverInstaller extends WebDriverInstallerBase {
   async install(driverVersion, outputDirectory) {
     const majorVersion = parseInt(driverVersion.split('.')[0], 10);
 
-    // Chrome distribution changed in version 115.
-    if (majorVersion < 115) {
+    if (majorVersion < NEW_CHROME_DISTRIBUTION_VERSION) {
       await this.installOld_(driverVersion, outputDirectory);
     } else {
       await this.installNew_(majorVersion, driverVersion, outputDirectory);
