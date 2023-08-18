@@ -86,7 +86,11 @@ class FirefoxWebDriverInstaller extends WebDriverInstallerBase {
       extension = 'tar.gz';
       isZip = false;
     } else if (os.platform() == 'darwin') {
-      platform = 'macos';
+      if (process.arch == 'arm64') {
+        platform = 'macos-aarch64';
+      } else {
+        platform = 'macos';
+      }
       extension = 'tar.gz';
       isZip = false;
     } else if (os.platform() == 'win32') {
