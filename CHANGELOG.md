@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.8](https://github.com/shaka-project/webdriver-installer/compare/v1.1.7...v1.1.8) (2023-08-18)
+
+
+### Bug Fixes
+
+* Get the correct binary for Firefox on M1 macs ([#31](https://github.com/shaka-project/webdriver-installer/issues/31)) ([f0e5a7c](https://github.com/shaka-project/webdriver-installer/commit/f0e5a7cc8d7ccc8f367bcf9386c383645e16eb3d))
+* Work around failure to launch Edge on Linux ([#32](https://github.com/shaka-project/webdriver-installer/issues/32)) ([ce45a24](https://github.com/shaka-project/webdriver-installer/commit/ce45a243e2d4e63ef32992607a1228d2b079d960))
+
 ## [1.1.7](https://github.com/shaka-project/webdriver-installer/compare/v1.1.6...v1.1.7) (2023-08-17)
 
 
