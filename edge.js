@@ -63,8 +63,6 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
    * @return {!Promise<string>}
    */
   async getBestDriverVersion(browserVersion) {
-    const idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
-
     let platform;
     if (os.platform() == 'linux') {
       platform = 'LINUX';
@@ -79,6 +77,18 @@ class EdgeWebDriverInstaller extends WebDriverInstallerBase {
     const urlFormatter = (majorVersion) => {
       return `${CDN_URL}/LATEST_RELEASE_${majorVersion}_${platform}`;
     };
+
+    let idealMajorVersion = parseInt(browserVersion.split('.')[0], 10);
+
+    // Work around https://github.com/MicrosoftEdge/EdgeWebDriver/issues/102,
+    // in which Linux versions of msedgedriver launch Chrome instead of Edge
+    // starting with version 115.  For now, driver version 114 is working for
+    // Edge 115 on Linux.
+    if (os.platform() == 'linux') {
+      if (idealMajorVersion > 114) {
+        idealMajorVersion = 114;
+      }
+    }
 
     return await InstallerUtils.fetchVersionUrlWithAutomaticDowngrade(
         idealMajorVersion,
