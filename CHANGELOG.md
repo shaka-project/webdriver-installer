@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.9](https://github.com/shaka-project/webdriver-installer/compare/v1.1.8...v1.1.9) (2023-09-07)
+
+
+### Bug Fixes
+
+* Revert EdgeDriver 115+ workaround ([#35](https://github.com/shaka-project/webdriver-installer/issues/35)) ([6df9bc2](https://github.com/shaka-project/webdriver-installer/commit/6df9bc2ba996a022361a299d511b99e1ea815b79))
+
 ## [1.1.8](https://github.com/shaka-project/webdriver-installer/compare/v1.1.7...v1.1.8) (2023-08-18)
 
 
