@@ -8,6 +8,10 @@ on:
         required: false
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || inputs.ref }}
+  cancel-in-progress: true
+
 name: Test in GitHub Actions Environment
 
 jobs:
@@ -21,13 +25,19 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: 'https://registry.npmjs.org'
+
       - run: npm ci
+
       - run: node ./main.js
+
       - name: Check installed drivers
         shell: bash
         run: |
@@ -53,5 +63,6 @@ jobs:
             check_driver msedgedriver.exe || rv=1
           fi
           exit "$rv"
+
       - uses: mxschmitt/action-tmate@v3
         if: ${{ failure() && github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
