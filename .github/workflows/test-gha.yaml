@@ -34,6 +34,12 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
+      # Firefox and Edge might be missing on Mac CI images.
+      - name: 'Install Firefox & Edge on Mac'
+        timeout-minutes: 5
+        if: matrix.os == 'macos-latest'
+        run: brew install --cask firefox microsoft-edge
+
       - run: npm ci
 
       - run: node ./main.js
