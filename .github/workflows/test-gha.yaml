@@ -29,9 +29,9 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
-          node-version: 12
+          node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
       - run: npm ci
