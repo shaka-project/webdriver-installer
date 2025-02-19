@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.10](https://github.com/shaka-project/webdriver-installer/compare/v1.1.9...v1.1.10) (2025-02-19)
+
+
+### Bug Fixes
+
+* Make installation process error-resilient ([#45](https://github.com/shaka-project/webdriver-installer/issues/45)) ([b70732b](https://github.com/shaka-project/webdriver-installer/commit/b70732b1f6cfab0718cca742b5c0e61899dfd752))
+
 ## [1.1.9](https://github.com/shaka-project/webdriver-installer/compare/v1.1.8...v1.1.9) (2023-09-07)
 
 
