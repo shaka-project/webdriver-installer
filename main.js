@@ -33,31 +33,38 @@ async function main(outputDirectory='.', logging=true) {
     const installer = new InstallerClass();
     const browserName = installer.getBrowserName();
     const driverName = installer.getDriverName();
-    const browserVersion = await installer.getInstalledBrowserVersion();
 
-    if (browserVersion == null) {
-      if (logging) {
-        console.log(`${browserName} not found.`);
-      }
-    } else {
-      const installedDriverVersion =
-          await installer.getInstalledDriverVersion(outputDirectory);
-      const bestDriverVersion =
-          await installer.getBestDriverVersion(browserVersion);
+    try {
+      const browserVersion = await installer.getInstalledBrowserVersion();
 
-      if (installedDriverVersion == bestDriverVersion) {
+      if (browserVersion == null) {
         if (logging) {
-          console.log(
-              `Version ${installedDriverVersion} of ${driverName} already` +
-              ` installed for ${browserName} version ${browserVersion}`);
+          console.log(`${browserName} not found.`);
         }
       } else {
-        await installer.install(bestDriverVersion, outputDirectory);
-        if (logging) {
-          console.log(
-              `Installed version ${bestDriverVersion} of ${driverName}` +
-              ` for ${browserName} version ${browserVersion}`);
+        const installedDriverVersion =
+            await installer.getInstalledDriverVersion(outputDirectory);
+        const bestDriverVersion =
+            await installer.getBestDriverVersion(browserVersion);
+
+        if (installedDriverVersion == bestDriverVersion) {
+          if (logging) {
+            console.log(
+                `Version ${installedDriverVersion} of ${driverName} already` +
+                ` installed for ${browserName} version ${browserVersion}`);
+          }
+        } else {
+          await installer.install(bestDriverVersion, outputDirectory);
+          if (logging) {
+            console.log(
+                `Installed version ${bestDriverVersion} of ${driverName}` +
+                ` for ${browserName} version ${browserVersion}`);
+          }
         }
+      }
+    } catch (e) {
+      if (logging) {
+        console.error(`Error installing ${driverName} for ${browserName}:`, e);
       }
     }
   }
