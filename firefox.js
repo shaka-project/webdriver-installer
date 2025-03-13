@@ -7,6 +7,7 @@
 const {WebDriverInstallerBase} = require('./base.js');
 const {InstallerUtils} = require('./utils.js');
 
+const fsPromises = require('fs').promises;
 const os = require('os');
 const path = require('path');
 
@@ -32,12 +33,38 @@ class FirefoxWebDriverInstaller extends WebDriverInstallerBase {
       // Output is a string like "Mozilla Firefox 96.0"
       return output ? output.trim().split(' ')[2] : null;
     } else if (os.platform() == 'darwin') {
-      return await InstallerUtils.getMacAppVersion('Firefox');
+      // The typical "InstallerUtils.getMacAppVersion" may hang for Firefox, so
+      // we use this alternate method instead.
+      // See https://github.com/shaka-project/webdriver-installer/issues/47
+      return this.getMacAppVersion();
     } else if (os.platform() == 'win32') {
       return await InstallerUtils.getWindowsExeVersion('firefox.exe');
     } else {
       throw new Error(`Unrecognized platform: ${os.platform()}`);
     }
+  }
+
+  /**
+   * Parse the macOS Firefox ini file to get the version number.
+   * @return {?string}
+   */
+  async getMacAppVersion() {
+    const path = '/Applications/Firefox.app/Contents/Resources/application.ini';
+    let data = null;
+    try {
+      data = await fsPromises.readFile(path, { encoding: 'utf8' });
+    } catch (error) {
+      // No such file, no Firefox installed.
+      return null;
+    }
+
+    const match = /^Version=(.*)$/m.exec(data);
+    if (!match) {
+      // This shouldn't happen.  Did the file change format?
+      console.error('Unable to parse Firefox version!');
+      return null;
+    }
+    return match[1];
   }
 
   /**
