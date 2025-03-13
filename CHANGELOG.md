@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.11](https://github.com/shaka-project/webdriver-installer/compare/v1.1.10...v1.1.11) (2025-03-13)
+
+
+### Bug Fixes
+
+* Fix Firefox macOS hang ([#48](https://github.com/shaka-project/webdriver-installer/issues/48)) ([79bb757](https://github.com/shaka-project/webdriver-installer/commit/79bb757ada95351adfcea76ce1ab21e37d2f0cce)), closes [#47](https://github.com/shaka-project/webdriver-installer/issues/47)
+
 ## [1.1.10](https://github.com/shaka-project/webdriver-installer/compare/v1.1.9...v1.1.10) (2025-02-19)
 
 
