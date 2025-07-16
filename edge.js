@@ -10,7 +10,7 @@ const {InstallerUtils} = require('./utils.js');
 const os = require('os');
 const path = require('path');
 
-const CDN_URL = 'https://msedgedriver.azureedge.net/';
+const CDN_URL = 'https://msedgedriver.microsoft.com/';
 
 /**
  * An installer for msedgedriver for desktop Edge.

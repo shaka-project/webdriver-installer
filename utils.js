@@ -264,7 +264,7 @@ class InstallerUtils {
       try {
         return await InstallerUtils.fetchVersionUrl(versionUrl, encoding);
       } catch (error) {
-        if (error.cause.status != 404) {
+        if (error.cause?.status != 404) {
           // Any unexpected error (other than HTTP 404) is thrown immediately.
           throw error;
         }
