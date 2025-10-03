@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/shaka-project/webdriver-installer/compare/v1.2.1...v1.2.2) (2025-10-03)
+
+
+### Bug Fixes
+
+* **ci:** Stop using NPM token, use trusted publishing ([#53](https://github.com/shaka-project/webdriver-installer/issues/53)) ([1c39ef4](https://github.com/shaka-project/webdriver-installer/commit/1c39ef49834fc6372dc2384739990d599a450eff))
+
 ## [1.2.1](https://github.com/shaka-project/webdriver-installer/compare/v1.2.0...v1.2.1) (2025-07-16)
 
 
