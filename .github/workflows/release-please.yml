@@ -1,9 +1,12 @@
+name: release-please
+
 on:
   push:
     branches:
       - main
 
-name: release-please
+permissions:
+  id-token: write  # Required for OIDC
 
 jobs:
   release-please:
@@ -40,8 +43,6 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
 
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
 
       - run: npm pack
