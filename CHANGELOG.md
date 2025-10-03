@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/shaka-project/webdriver-installer/compare/v1.2.2...v1.2.3) (2025-10-03)
+
+
+### Bug Fixes
+
+* **ci:** Update npm to support OIDC for trusted publishing ([#55](https://github.com/shaka-project/webdriver-installer/issues/55)) ([e95d0a2](https://github.com/shaka-project/webdriver-installer/commit/e95d0a27b1d4c251d70b5aaa0b9d05f978ef4b4b))
+
 ## [1.2.2](https://github.com/shaka-project/webdriver-installer/compare/v1.2.1...v1.2.2) (2025-10-03)
 
 
