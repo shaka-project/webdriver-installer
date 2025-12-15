@@ -5,14 +5,13 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write  # Required for OIDC
-
 jobs:
   release-please:
     runs-on: ubuntu-latest
 
     permissions:
+      # Required for OIDC ("trusted publishing")
+      id-token: write
       # Write to "contents" is needed to create a release
       contents: write
       # Write to pull-requests is needed to create and update the release PR
@@ -35,26 +34,34 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # NOTE: OIDC fails with node less than 24.
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
         if: ${{ steps.release.outputs.release_created }}
 
-      # Ensure npm 11.5.1 or later is installed for OIDC
+      # NOTE: OIDC fails with npm less than 11.5.1.
       - name: Update npm
-        run: npm install -g npm@latest
+        run: sudo npm install -g npm@latest
+        if: ${{ steps.release.outputs.release_created }}
 
       - run: npm ci
         if: ${{ steps.release.outputs.release_created }}
 
-      - run: npm publish
+      # NOTE: OIDC fails if the repository URL doesn't match package.json.
+      - run: npm pkg set repository.url=https://github.com/${{ github.repository }}
         if: ${{ steps.release.outputs.release_created }}
 
-      - run: npm pack
+      # NOTE: --access public is required for scoped forks.
+      - run: npm publish --access public
+        if: ${{ steps.release.outputs.release_created }}
+
+      # Stores the file name into the file "tarball" (unpredictable for forks).
+      - run: npm pack > tarball
         if: ${{ steps.release.outputs.release_created }}
 
       - name: Attach files to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release upload --clobber "${{ steps.release.outputs.tag_name }}" webdriver-installer-*.tgz
+        # Reads the file name from the file "tarball".
+        run: gh release upload --clobber "${{ steps.release.outputs.tag_name }}" "$(cat tarball)"
         if: ${{ steps.release.outputs.release_created }}
