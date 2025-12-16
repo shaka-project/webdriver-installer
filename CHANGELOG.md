@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.3.0](https://github.com/shaka-project/webdriver-installer/compare/v1.2.4...v1.3.0) (2025-12-16)
+
+
+### Features
+
+* Add MS Edge support on Linux and Mac ([59505f4](https://github.com/shaka-project/webdriver-installer/commit/59505f49b94030c63377d72e2b4639093915ab3d))
+* Make logging optional, export main ([1d7bb17](https://github.com/shaka-project/webdriver-installer/commit/1d7bb1755725a50b9c5a423c55402f6a84503919))
+
+
+### Bug Fixes
+
+* Choose platform-specific msedgedriver version ([#8](https://github.com/shaka-project/webdriver-installer/issues/8)) ([2e0e859](https://github.com/shaka-project/webdriver-installer/commit/2e0e8598f878c0c3fcd8ed55d4e830da398a891b))
+* **ci:** Stop using NPM token, use trusted publishing ([#53](https://github.com/shaka-project/webdriver-installer/issues/53)) ([1c39ef4](https://github.com/shaka-project/webdriver-installer/commit/1c39ef49834fc6372dc2384739990d599a450eff))
+* **ci:** Trusted publishing works now ([#57](https://github.com/shaka-project/webdriver-installer/issues/57)) ([2d42fad](https://github.com/shaka-project/webdriver-installer/commit/2d42fad9bd1f64874e61227cee1b7ad4a2cb68a4))
+* **ci:** Update npm to support OIDC for trusted publishing ([#55](https://github.com/shaka-project/webdriver-installer/issues/55)) ([e95d0a2](https://github.com/shaka-project/webdriver-installer/commit/e95d0a27b1d4c251d70b5aaa0b9d05f978ef4b4b))
+* Fix Chromedriver download for version 115+ ([#28](https://github.com/shaka-project/webdriver-installer/issues/28)) ([1d17e40](https://github.com/shaka-project/webdriver-installer/commit/1d17e40c70be980067f4972d538ddb55db88c759))
+* Fix CLI installation ([2f6b649](https://github.com/shaka-project/webdriver-installer/commit/2f6b649033312f778795b1372abfc0a175d70e61))
+* Fix execution in node v12 ([9b06017](https://github.com/shaka-project/webdriver-installer/commit/9b06017b7c83ebfea1e600d7f667b2810ab05b5f))
+* Fix failure to query registry for Firefox ([ce12f34](https://github.com/shaka-project/webdriver-installer/commit/ce12f347f96406cc1f0a219c4c44cd2a9b827254))
+* Fix Firefox macOS hang ([#48](https://github.com/shaka-project/webdriver-installer/issues/48)) ([79bb757](https://github.com/shaka-project/webdriver-installer/commit/79bb757ada95351adfcea76ce1ab21e37d2f0cce)), closes [#47](https://github.com/shaka-project/webdriver-installer/issues/47)
+* Fix GitHub API rate limit issues getting geckodriver release ([074beb7](https://github.com/shaka-project/webdriver-installer/commit/074beb79adf7d9807ab57b67c9edd26d9451270e))
+* Fix msedgedriver install ([#51](https://github.com/shaka-project/webdriver-installer/issues/51)) ([3a25d6c](https://github.com/shaka-project/webdriver-installer/commit/3a25d6ce1fec24259672202b9fa93df2bfe67180))
+* Fix msedgedriver version detection ([#20](https://github.com/shaka-project/webdriver-installer/issues/20)) ([3838b88](https://github.com/shaka-project/webdriver-installer/commit/3838b889772e2a0ce7167e9220969b25714f0d03))
+* Fix unlinking existing binaries ([#12](https://github.com/shaka-project/webdriver-installer/issues/12)) ([8a43765](https://github.com/shaka-project/webdriver-installer/commit/8a43765b54fbbf164762f7a8edf52520b4d08059))
+* Get the correct binary for Edge on M1 macs ([#30](https://github.com/shaka-project/webdriver-installer/issues/30)) ([b5303ea](https://github.com/shaka-project/webdriver-installer/commit/b5303ea26653cee24a122208a1e7088021a77ebe))
+* Get the correct binary for Firefox on M1 macs ([#31](https://github.com/shaka-project/webdriver-installer/issues/31)) ([f0e5a7c](https://github.com/shaka-project/webdriver-installer/commit/f0e5a7cc8d7ccc8f367bcf9386c383645e16eb3d))
+* Ignore errors executing non-executable drivers ([#23](https://github.com/shaka-project/webdriver-installer/issues/23)) ([07c8644](https://github.com/shaka-project/webdriver-installer/commit/07c864446e68e6f8714c3d1a899b42b2d0931aae)), closes [#22](https://github.com/shaka-project/webdriver-installer/issues/22)
+* Improved error logging for CLI ([b588638](https://github.com/shaka-project/webdriver-installer/commit/b588638774526d621983e0b497aa85ab217fcc46))
+* Make installation process error-resilient ([#45](https://github.com/shaka-project/webdriver-installer/issues/45)) ([b70732b](https://github.com/shaka-project/webdriver-installer/commit/b70732b1f6cfab0718cca742b5c0e61899dfd752))
+* Make Windows browser version queries more robust ([85f3b27](https://github.com/shaka-project/webdriver-installer/commit/85f3b2796e06e1a0f2171b46beef73f6a0407ecb))
+* Retry when WebDriver updates are not available yet ([#24](https://github.com/shaka-project/webdriver-installer/issues/24)) ([e0312c8](https://github.com/shaka-project/webdriver-installer/commit/e0312c89eab70bbb7241298846dff93e4a690753))
+* Revert EdgeDriver 115+ workaround ([#35](https://github.com/shaka-project/webdriver-installer/issues/35)) ([6df9bc2](https://github.com/shaka-project/webdriver-installer/commit/6df9bc2ba996a022361a299d511b99e1ea815b79))
+* Work around failure to launch Edge on Linux ([#32](https://github.com/shaka-project/webdriver-installer/issues/32)) ([ce45a24](https://github.com/shaka-project/webdriver-installer/commit/ce45a243e2d4e63ef32992607a1228d2b079d960))
+
 ## [1.2.4](https://github.com/shaka-project/webdriver-installer/compare/v1.2.3...v1.2.4) (2025-12-16)
 
 
