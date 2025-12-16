@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/shaka-project/webdriver-installer/compare/v1.2.3...v1.2.4) (2025-12-16)
+
+
+### Bug Fixes
+
+* **ci:** Trusted publishing works now ([#57](https://github.com/shaka-project/webdriver-installer/issues/57)) ([2d42fad](https://github.com/shaka-project/webdriver-installer/commit/2d42fad9bd1f64874e61227cee1b7ad4a2cb68a4))
+
 ## [1.2.3](https://github.com/shaka-project/webdriver-installer/compare/v1.2.2...v1.2.3) (2025-10-03)
 
 
