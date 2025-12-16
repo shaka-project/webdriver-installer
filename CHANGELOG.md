@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/shaka-project/webdriver-installer/compare/v1.2.4...v1.2.5) (2025-12-16)
+
+
+### Bug Fixes
+
+* **ci:** Fixed typo in NPM config ([a052388](https://github.com/shaka-project/webdriver-installer/commit/a052388f6ea4c6997c67a75418fa900b851a8ed3))
+
 ## [1.2.4](https://github.com/shaka-project/webdriver-installer/compare/v1.2.3...v1.2.4) (2025-12-16)
 
 
