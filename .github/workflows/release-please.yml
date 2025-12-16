@@ -41,7 +41,7 @@ jobs:
 
       # NOTE: OIDC fails with npm less than 11.5.1.
       - name: Update npm
-        run: sudo npm install -g npm@latest
+        run: sudo npm install -g npm@11.7
         if: ${{ steps.release.outputs.release_created }}
 
       - run: npm ci
