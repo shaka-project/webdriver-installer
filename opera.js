@@ -57,7 +57,9 @@ class OperaWebDriverInstaller extends WebDriverInstallerBase {
 
       for (const exePath of possiblePaths) {
         const version = await InstallerUtils.getWindowsExeVersion(exePath);
-        if (version) return version;
+        if (version) {
+          return version;
+        }
       }
 
       // Fallback to PATH
