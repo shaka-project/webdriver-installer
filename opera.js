@@ -10,9 +10,6 @@ const {InstallerUtils} = require('./utils.js');
 const os = require('os');
 const path = require('path');
 
-const GITHUB_API_LATEST =
-  'https://api.github.com/repos/operasoftware/operachromiumdriver/releases/latest';
-
 class OperaWebDriverInstaller extends WebDriverInstallerBase {
   getBrowserName() {
     return 'Opera';

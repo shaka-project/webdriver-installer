@@ -35,11 +35,23 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      # Firefox and Edge might be missing on Mac CI images.
+      # Firefox, Edge and Opera might be missing on Mac CI images.
       - name: 'Install Firefox & Edge on Mac'
         timeout-minutes: 5
         if: matrix.os == 'macos-latest'
-        run: brew install --cask firefox microsoft-edge
+        run: brew install --cask firefox microsoft-edge opera
+
+      # Opera might be missing on Windows CI images.
+      - name: 'Install Opera on Windows'
+        timeout-minutes: 5
+        if: matrix.os == 'windows-latest' && matrix.browser == 'Opera'
+        run: choco install -y opera --ignore-checksums --params '"/NoAutostart /NoDesktopShortcut /NoTaskbarShortcut"'
+
+      # Opera might be missing on Ubuntu CI images.
+      - name: 'Install Opera on Ubuntu'
+        timeout-minutes: 5
+        if: matrix.os == 'ubuntu-latest' && matrix.browser == 'Opera'
+        run: sudo apt -y update && sudo apt -y install snapd && sudo snap install opera
 
       - run: npm ci
 
@@ -61,13 +73,16 @@ jobs:
             check_driver chromedriver || rv=1
             check_driver geckodriver || rv=1
             check_driver msedgedriver || rv=1
+            check_driver operadriver || rv=1
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
             check_driver chromedriver || rv=1
             check_driver geckodriver || rv=1
+            check_driver operadriver || rv=1
           elif [[ "${{ runner.os }}" == "Windows" ]]; then
             check_driver chromedriver.exe || rv=1
             check_driver geckodriver.exe || rv=1
             check_driver msedgedriver.exe || rv=1
+            check_driver operadriver.exe || rv=1
           fi
           exit "$rv"
 
