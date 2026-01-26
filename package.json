@@ -14,7 +14,8 @@
     "webdriver",
     "chrome",
     "firefox",
-    "edge"
+    "edge",
+    "opera"
   ],
   "author": "Joey Parrish <joeyparrish@google.com>",
   "dependencies": {

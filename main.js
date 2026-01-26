@@ -9,12 +9,14 @@ const {ChromeWebDriverInstaller} = require('./chrome.js');
 const {ChromeAndroidWebDriverInstaller} = require('./chrome-android.js');
 const {FirefoxWebDriverInstaller} = require('./firefox.js');
 const {EdgeWebDriverInstaller} = require('./edge.js');
+const {OperaWebDriverInstaller} = require('./opera.js');
 
 const INSTALLER_CLASSES = [
   ChromeWebDriverInstaller,
   ChromeAndroidWebDriverInstaller,
   FirefoxWebDriverInstaller,
   EdgeWebDriverInstaller,
+  OperaWebDriverInstaller,
 ];
 
 /**
