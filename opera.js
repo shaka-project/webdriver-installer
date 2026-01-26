@@ -105,7 +105,7 @@ class OperaWebDriverInstaller extends WebDriverInstallerBase {
 
     const archiveUrl =
       `https://github.com/operasoftware/operachromiumdriver/releases/download/` +
-      `v${driverVersion}/operadriver_${platform}.zip`;
+      `v.${driverVersion}/operadriver_${platform}.zip`;
 
     // IMPORTANT: operadriver is inside a folder in the zip
     const nameInArchive = `operadriver_${platform}/${binaryName}`;
