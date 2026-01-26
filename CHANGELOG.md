@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/shaka-project/webdriver-installer/compare/v1.2.5...v1.3.0) (2026-01-26)
+
+
+### Features
+
+* Add Opera support ([#61](https://github.com/shaka-project/webdriver-installer/issues/61)) ([e242054](https://github.com/shaka-project/webdriver-installer/commit/e242054106996d2f2d0078964dedac6d6c4caf73))
+
 ## [1.2.5](https://github.com/shaka-project/webdriver-installer/compare/v1.2.4...v1.2.5) (2025-12-16)
 
 
