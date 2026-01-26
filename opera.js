@@ -48,7 +48,19 @@ class OperaWebDriverInstaller extends WebDriverInstallerBase {
     }
 
     if (os.platform() === 'win32') {
-      // Try default installation path or fallback to PATH
+      // Try standard paths
+      const possiblePaths = [
+        'C:\\Program Files\\Opera\\opera.exe',
+        'C:\\Program Files (x86)\\Opera\\opera.exe',
+        'C:\\Users\\' + os.userInfo().username + '\\AppData\\Local\\Programs\\Opera\\opera.exe',
+      ];
+
+      for (const exePath of possiblePaths) {
+        const version = await InstallerUtils.getWindowsExeVersion(exePath);
+        if (version) return version;
+      }
+
+      // Fallback to PATH
       return await InstallerUtils.getWindowsExeVersion('opera.exe');
     }
 
