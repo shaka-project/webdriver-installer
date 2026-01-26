@@ -44,13 +44,13 @@ jobs:
       # Opera might be missing on Windows CI images.
       - name: 'Install Opera on Windows'
         timeout-minutes: 5
-        if: matrix.os == 'windows-latest' && matrix.browser == 'Opera'
+        if: matrix.os == 'windows-latest'
         run: choco install -y opera --ignore-checksums --params '"/NoAutostart /NoDesktopShortcut /NoTaskbarShortcut"'
 
       # Opera might be missing on Ubuntu CI images.
       - name: 'Install Opera on Ubuntu'
         timeout-minutes: 5
-        if: matrix.os == 'ubuntu-latest' && matrix.browser == 'Opera'
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt -y update && sudo apt -y install snapd && sudo snap install opera
 
       - run: npm ci
