@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/shaka-project/webdriver-installer/compare/v1.3.1...v1.3.2) (2026-02-09)
+
+
+### Bug Fixes
+
+* **ci:** Fix tarball upload permissions ([#65](https://github.com/shaka-project/webdriver-installer/issues/65)) ([8af763a](https://github.com/shaka-project/webdriver-installer/commit/8af763aeae3fc3db99212d7c5f2efadf7b5d607d))
+
 ## [1.3.1](https://github.com/shaka-project/webdriver-installer/compare/v1.3.0...v1.3.1) (2026-02-08)
 
 
