@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/shaka-project/webdriver-installer/compare/v1.3.0...v1.3.1) (2026-02-08)
+
+
+### Bug Fixes
+
+* **ci:** More robust release workflow ([#63](https://github.com/shaka-project/webdriver-installer/issues/63)) ([b36b4e6](https://github.com/shaka-project/webdriver-installer/commit/b36b4e675add60f2838203dc2798c8f345380142))
+
 ## [1.3.0](https://github.com/shaka-project/webdriver-installer/compare/v1.2.5...v1.3.0) (2026-01-26)
 
 
