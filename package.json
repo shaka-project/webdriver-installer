@@ -22,7 +22,7 @@
     "node-fetch": "^2.6.7",
     "regedit": "^5.0.0",
     "tar-stream": "^2.2.0",
-    "yauzl": "^2.10.0"
+    "yauzl": "^3.2.1"
   },
   "license": "Apache-2.0"
 }
