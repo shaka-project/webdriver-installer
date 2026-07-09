@@ -10,14 +10,12 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 const os = require('os');
 const path = require('path');
-const regedit = require('regedit');
 const stream = require('stream');
 const tar = require('tar-stream');
 const util = require('util');
 const yauzl = require('yauzl');
 const zlib = require('zlib');
 
-const regQuery = util.promisify(regedit.list);
 const execFile = util.promisify(childProcess.execFile);
 const pipeline = util.promisify(stream.pipeline);
 const zipFromBuffer = util.promisify(yauzl.fromBuffer);
@@ -88,10 +86,14 @@ class InstallerUtils {
   }
 
   /**
-   * Get a version number from the Windows registry.
+   * Read a value from the Windows registry.  Returns null if not found.
    *
-   * @param {string} regPath
-   * @param {string} key
+   * Uses PowerShell's registry provider.  We avoid WMI-based registry access
+   * (as used by some libraries), which can hang indefinitely when a machine's
+   * WMI provider is unhealthy and would block driver installation.
+   *
+   * @param {string} regPath  A registry path like "HKLM\\Software\\..."
+   * @param {string} key  A value name, or "" for the key's default value.
    * @return {!Promise<?string>}
    */
   static async getWindowsRegistryVersion(regPath, key) {
@@ -99,17 +101,31 @@ class InstallerUtils {
       return null;
     }
 
-    // Try the 64-bit registry first, then fall back to the 32-bit registry.
-    // Necessary values could be in either location.
-    let result = await regQuery(regPath, '64');
-    if (!result[regPath].exists || !result[regPath].values[key]) {
-      result = await regQuery(regPath, '32');
-    }
-    if (!result[regPath].exists || !result[regPath].values[key]) {
-      return null;
+    // Read the native view first, then the 32-bit (WOW6432Node) view, since the
+    // value could be in either.
+    const psPath = regPath.replace(/^HKLM\\/i, 'HKLM:\\');
+    const psPaths = [psPath];
+    const wowPath = psPath.replace(/^(HKLM:\\Software\\)/i, '$1WOW6432Node\\');
+    if (wowPath != psPath) {
+      psPaths.push(wowPath);
     }
 
-    return result[regPath].values[key].value;
+    // PowerShell exposes a key's default value under the name "(default)".
+    const valueName = key === '' ? '(default)' : key;
+
+    for (const psRegPath of psPaths) {
+      const result = await InstallerUtils.runCommand([
+        'powershell',
+        `(Get-ItemProperty -LiteralPath '${psRegPath}' ` +
+            `-ErrorAction SilentlyContinue).'${valueName}'`,
+      ]);
+      const value = result.stdout.trim();
+      if (value) {
+        return value;
+      }
+    }
+
+    return null;
   }
 
   /**
