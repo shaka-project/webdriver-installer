@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/shaka-project/webdriver-installer/compare/v1.3.2...v1.3.3) (2026-07-10)
+
+
+### Bug Fixes
+
+* Read the Windows registry via PowerShell instead of WMI ([#71](https://github.com/shaka-project/webdriver-installer/issues/71)) ([67f6f43](https://github.com/shaka-project/webdriver-installer/commit/67f6f43e0f2178b64a409a6907b46dbaa0063d67))
+
 ## [1.3.2](https://github.com/shaka-project/webdriver-installer/compare/v1.3.1...v1.3.2) (2026-02-09)
 
 
