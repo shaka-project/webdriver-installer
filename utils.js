@@ -16,12 +16,70 @@ const util = require('util');
 const yauzl = require('yauzl');
 const zlib = require('zlib');
 
-const execFile = util.promisify(childProcess.execFile);
 const pipeline = util.promisify(stream.pipeline);
 const zipFromBuffer = util.promisify(yauzl.fromBuffer);
 
 const WINDOWS_REGISTRY_APP_PATHS =
     'HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\App\ Paths\\';
+
+// Every command we run is a quick local probe: read a registry value, ask a
+// binary for its version, ask an attached device what it has installed.  None
+// of them should take more than a second or two.  But each one talks to
+// something that can stop answering without ever failing: an unresponsive
+// Android device over adb, an unhealthy OS service behind PowerShell, a
+// launch-on-demand app behind osascript.  Without a limit, one sick component
+// hangs the whole installation forever, which is much worse than skipping a
+// browser.  Be generous, since a false timeout means a driver doesn't get
+// installed, but do not wait indefinitely.
+const COMMAND_TIMEOUT_MS = 60 * 1000;
+
+// Version metadata requests are small.  This caps both the wait for a response
+// and the time spent reading the body, so a connection that opens and then
+// stalls cannot block us forever.
+const FETCH_TIMEOUT_MS = 60 * 1000;
+
+// Driver archives are a few megabytes, and may be pulled over a slow link, so
+// they get a much larger budget than metadata requests.
+const DOWNLOAD_TIMEOUT_MS = 5 * 60 * 1000;
+
+/**
+ * Forcibly kill a running command, and anything it spawned.
+ *
+ * On Windows, tools installed through Chocolatey (adb among them) run behind a
+ * generated shim, so the process we started is only a launcher and the real
+ * tool is its child.  Killing the launcher alone would leave the hung tool
+ * running, which is the stray process this timeout exists to prevent.
+ * taskkill /T covers the tree and /F forces it.
+ *
+ * Elsewhere, the wrappers we run into (the google-chrome shell script, for
+ * example) exec the real binary in place, so there is no separate child.
+ *
+ * @param {!ChildProcess} child
+ */
+function killProcessTree(child) {
+  // Tear down the pipes first.  We are waiting on the command's output streams
+  // to close, and if it left a child of its own holding the write end open,
+  // that never happens and killing the process alone would not unblock us.
+  // child_process does the same thing in its own timeout handling.
+  if (child.stdout) {
+    child.stdout.destroy();
+  }
+  if (child.stderr) {
+    child.stderr.destroy();
+  }
+
+  if (os.platform() == 'win32') {
+    const root = process.env.SystemRoot || 'C:\\Windows';
+    // Errors are ignored: by the time this runs, the process may already be
+    // gone, and there is nothing useful to do about it either way.
+    childProcess.execFile(
+        `${root}\\System32\\taskkill.exe`,
+        ['/pid', child.pid.toString(), '/t', '/f'],
+        () => {});
+  } else {
+    child.kill('SIGKILL');
+  }
+}
 
 /**
  * A static utility class for driver installers to use for common operations.
@@ -32,13 +90,54 @@ class InstallerUtils {
    * All output is interpretted as UTF-8.
    *
    * Throws if the command fails.  If the command does not exist, the thrown
-   * error has .code == 'ENOENT'.
+   * error has .code == 'ENOENT'.  If the command runs longer than the timeout,
+   * it is killed and the thrown error has .killed == true.
    *
    * @param {!Array<string>} args
+   * @param {number=} timeoutMs
    * @return {!Promise<!Object>} as returned by child_process.spawn
    */
-  static async runCommand(args) {
-    return await execFile(args[0], args.slice(1), {encoding: 'utf8'});
+  static runCommand(args, timeoutMs=COMMAND_TIMEOUT_MS) {
+    // NOTE: We run our own timer rather than passing execFile's "timeout"
+    // option, because that option kills only the process we started, which on
+    // Windows can be a shim wrapping the tool that is actually stuck.
+    return new Promise((resolve, reject) => {
+      let timedOut = false;
+      let timer = null;
+
+      const child = childProcess.execFile(
+          args[0], args.slice(1), {encoding: 'utf8'},
+          (error, stdout, stderr) => {
+            clearTimeout(timer);
+
+            if (!error) {
+              resolve({stdout, stderr});
+              return;
+            }
+
+            // Attach the output the same way util.promisify(execFile) would
+            // have.  Callers below read .stderr off the thrown error.
+            error.stdout = stdout;
+            error.stderr = stderr;
+
+            if (timedOut) {
+              // Say what actually happened, so a hang is recognizable in a log
+              // instead of looking like an ordinary command failure.  Callers
+              // use .killed to tell the two apart.
+              error.killed = true;
+              error.message =
+                  `Command timed out after ${timeoutMs / 1000}s: ` +
+                  args.join(' ');
+            }
+
+            reject(error);
+          });
+
+      timer = setTimeout(() => {
+        timedOut = true;
+        killProcessTree(child);
+      }, timeoutMs);
+    });
   }
 
   /**
@@ -73,10 +172,11 @@ class InstallerUtils {
    * Fetch a URL, throwing if the HTTP status code is not 2XX.
    *
    * @param {string} url
+   * @param {number=} timeoutMs
    * @return {!Promise<!Response>}
    */
-  static async fetchUrl(url) {
-    const response = await fetch(url);
+  static async fetchUrl(url, timeoutMs=FETCH_TIMEOUT_MS) {
+    const response = await fetch(url, {timeout: timeoutMs});
     if (!response.ok) {
       throw new Error(
           `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
@@ -200,6 +300,13 @@ class InstallerUtils {
       ]);
       return result.stdout.trim();
     } catch (error) {
+      if (error.killed) {
+        // A timeout is not the same as "no such app".  Let it propagate, so
+        // that a hung osascript is reported instead of quietly skipping the
+        // browser's driver.  See also the Firefox-specific workaround in
+        // firefox.js, added for a hang of exactly this kind.
+        throw error;
+      }
       return null;
     }
   }
@@ -221,6 +328,12 @@ class InstallerUtils {
       if (error.code == 'ENOENT') {
         // No adb, so no Android connection.
         return null;
+      } else if (error.killed) {
+        // adb stopped responding, which happens when a device is attached but
+        // wedged.  runCommand already put the timeout into the message, so
+        // propagate it rather than flattening it into the generic failure
+        // below.
+        throw error;
       } else if (error.code != 0) {
         if (error.stderr.includes('no devices')) {
           // No devices attached.
@@ -312,7 +425,8 @@ class InstallerUtils {
     // The GitHub API has rate limits, but this is public.  It will redirect to
     // a URL specific to the tag.
     const url = `https://github.com/${repo}/releases/latest`;
-    const response = await fetch(url, {method: 'HEAD'});
+    const response = await fetch(
+        url, {method: 'HEAD', timeout: FETCH_TIMEOUT_MS});
     // The redirected URL will be something like:
     //   "https://github.com/mozilla/geckodriver/releases/tag/v0.30.0"
     return response.url.split('/').pop();
@@ -389,7 +503,7 @@ class InstallerUtils {
    */
   static async extractFromNetworkArchive(
       url, nameInArchive, outputPath, isZip) {
-    const response = await InstallerUtils.fetchUrl(url);
+    const response = await InstallerUtils.fetchUrl(url, DOWNLOAD_TIMEOUT_MS);
     const buffer = Buffer.from(await response.arrayBuffer());
 
     // If the output file already exists, remove it before overwriting it.
