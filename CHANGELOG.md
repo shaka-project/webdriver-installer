@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/shaka-project/webdriver-installer/compare/v1.3.3...v1.3.4) (2026-07-29)
+
+
+### Bug Fixes
+
+* Time out external commands and network requests ([#75](https://github.com/shaka-project/webdriver-installer/issues/75)) ([abfb3c8](https://github.com/shaka-project/webdriver-installer/commit/abfb3c8724628b84a8cf57fd8d4acac07994a561))
+
 ## [1.3.3](https://github.com/shaka-project/webdriver-installer/compare/v1.3.2...v1.3.3) (2026-07-10)
 
 
