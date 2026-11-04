@@ -244,6 +244,32 @@ class InstallerUtils {
   }
 
   /**
+   * Read up to maxBytes from the start of a file, as a UTF-8 string.
+   *
+   * @param {string} filePath
+   * @param {number} maxBytes
+   * @return {!Promise<?string>} null if the file can't be read.
+   */
+  static async readFileHead(filePath, maxBytes) {
+    let handle;
+    try {
+      handle = await fsPromises.open(filePath, 'r');
+    } catch (error) {
+      return null;
+    }
+
+    try {
+      const buffer = Buffer.alloc(maxBytes);
+      const {bytesRead} = await handle.read(buffer, 0, maxBytes, 0);
+      return buffer.toString('utf8', 0, bytesRead);
+    } catch (error) {
+      return null;
+    } finally {
+      await handle.close();
+    }
+  }
+
+  /**
    * Get a version number from the metadata of a Windows executable.
    *
    * @param {string} executablePath

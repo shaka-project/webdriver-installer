@@ -37,3 +37,16 @@ async function foo() {
   await installWebDrivers('/path/to/webdriver-binaries/', withLogging);
 }
 ```
+
+
+## Firefox Snap Packages on Linux
+
+Snap packages of Firefox (the default on Ubuntu 22.04+) can't see the host's
+`/tmp`, where geckodriver creates temporary Firefox profiles by default.  See
+[Mozilla bug 1819377](https://bugzilla.mozilla.org/show_bug.cgi?id=1819377).
+
+When the default Firefox is a snap, this tool installs the real driver as
+`geckodriver-bin`, and installs `geckodriver` as a small wrapper script that
+points geckodriver's temporary directory at `~/snap/firefox/common/`, which the
+snap can access.  An explicit `--profile-root` argument to geckodriver still
+takes precedence.
