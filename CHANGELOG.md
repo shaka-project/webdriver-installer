@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/shaka-project/webdriver-installer/compare/v1.3.4...v1.3.5) (2026-11-05)
+
+
+### Bug Fixes
+
+* Support snap packages of Firefox on Linux ([#78](https://github.com/shaka-project/webdriver-installer/issues/78)) ([2be26f6](https://github.com/shaka-project/webdriver-installer/commit/2be26f6d8354b4b5e9704ebd631fe70aad820e9d)), closes [#18](https://github.com/shaka-project/webdriver-installer/issues/18)
+
 ## [1.3.4](https://github.com/shaka-project/webdriver-installer/compare/v1.3.3...v1.3.4) (2026-07-29)
 
 
